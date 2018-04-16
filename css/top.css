@@ -1,0 +1,16 @@
+.wrapper {
+    width: 800px;
+    margin: 0 auto;
+}
+
+h1 {
+    font-size: 50px;
+    width: 400px;
+    text-align: center;
+    margin: 0 auto;
+}
+
+#map {
+    width: 800px;
+    height: 400px;
+}
