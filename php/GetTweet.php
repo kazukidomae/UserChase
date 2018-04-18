@@ -11,7 +11,7 @@
   		}
 		
 		// 緯度経度指定
-		public function geocodeDesignation(){
+		public function geocodeDesignation($lat, $long){    
 			$twObj = $this->twittertCertification();
 			// TimeLine取得
 			$req = $twObj->OAuthRequest('https://api.twitter.com/1.1/search/tweets.json','GET',
@@ -19,7 +19,8 @@
 					//'lang' => 'ja',
 					//'q' => '%23羽田空港'
 					// 羽田空港
-					'geocode'=> '35.5493,139.7798,1km'
+					'count'=>'50',
+					'geocode'=> ''.$lat.','.$long.',3km'
 				));
 			return json_decode($req);
 		}
