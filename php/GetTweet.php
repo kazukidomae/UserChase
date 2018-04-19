@@ -16,9 +16,6 @@
 			// TimeLine取得
 			$req = $twObj->OAuthRequest('https://api.twitter.com/1.1/search/tweets.json','GET',
 				array(
-					//'lang' => 'ja',
-					//'q' => '%23羽田空港'
-					// 羽田空港
 					'count'=>'50',
 					'geocode'=> ''.$lat.','.$long.',3km'
 				));
@@ -26,13 +23,13 @@
 		}
 		
 		// ScreenName指定
-		public function screenNameDesignation(){
+		public function screenNameDesignation($screenName){
 			$twObj = $this->twittertCertification();
 			// TimeLine取得
 			$req = $twObj->OAuthRequest('https://api.twitter.com/1.1/statuses/user_timeline.json','GET',
 					array(
-						'count'=>'10',
-						'screen_name' => 'd_zack3',
+						'count'=>'20',
+						'screen_name' => $screenName
 					));
 			return json_decode($req);
 		}

@@ -2,20 +2,17 @@ var map;
 var tweetList;
 var marker = [];
 var infoWindow = [];
-var slat;
-var slong;
+var mlat;
+var mlong;
 
 function initMap() {
     
-    slat = window.sessionStorage.getItem(['slat']);
-    slong = window.sessionStorage.getItem(['slong']);
-    
-    console.log(slat);
-    console.log(slong);
-    
+	// sessionからの緯度経度
+    mlat = window.sessionStorage.getItem(['mlat']);
+    mlong = window.sessionStorage.getItem(['mlong']);
     
     // Map座標
-    var mapPosition = {lat: parseFloat(slat), lng: parseFloat(slong)};
+    var mapPosition = {lat: parseFloat(mlat), lng: parseFloat(mlong)};
     // Map描画要素
     var mapArea = document.getElementById('map');
     var mapOptions = {
@@ -51,7 +48,7 @@ function initMarker(tweetList){
     var markerCount = 0
     
     // マップ中心Marker
-    var markerPosition = {lat: parseFloat(slat), lng: parseFloat(slong)};
+    var markerPosition = {lat: parseFloat(mlat), lng: parseFloat(mlong)};
     marker[markerCount] = new google.maps.Marker({
         position: markerPosition,
         map: map
@@ -73,21 +70,48 @@ function initMarker(tweetList){
 		
 		// 吹き出し
 		infoWindow[markerCount] = new google.maps.InfoWindow({
-        	content: '<div class="maptweet"><img src="'+tweetList[item]['icon']+'"><p>'+tweetList[item]['name']+'</p><p>@'+item+'</p><p>'+tweetList[item]['day']+'</p></div>'
+			
+			// 吹き出し記載情報(アイコン、TwitterID、Tweet日時)
+        	content: '<div class="maptweet"><img src="'+tweetList[item]['icon']+'"><p id ="screen_name">'+tweetList[item]['screenName']+'</p><p>'+tweetList[item]['day']+'</p></div>'
 			
   		});
 		markerEvent(markerCount);
         markerCount = ++markerCount;
     }
-
 }
 
+
 function markerEvent(markerCount){
+	
+	// マウスオーバー
 	marker[markerCount].addListener('mouseover',function(){
 		infoWindow[markerCount].open(map,marker[markerCount])
 	});
-	// mouseoutイベントを取得するListenerを追加
+	// マウスアウト
     marker[markerCount].addListener('mouseout', function(){
          infoWindow[markerCount].close();
+    });
+	
+	// マウスクリック
+	marker[markerCount].addListener('click', function(){
+		
+		// POSTデータを送信
+		var form = document.createElement('form');
+    	document.body.appendChild(form);
+    	var input = document.createElement('input');
+    	input.setAttribute('type','hidden');
+		
+    	input.setAttribute('name', 'searchConditions[0]');
+		input.setAttribute('value' , 'screenName');
+		form.appendChild(input);
+		input = input.cloneNode(false);
+		
+		input.setAttribute('name', 'searchConditions[1]');
+    	input.setAttribute('value' , document.getElementById('screen_name').innerHTML);
+    	form.appendChild(input);
+		
+    	form.setAttribute('action', './php/Controller.php');
+    	form.setAttribute('method' , 'post');
+    	form.submit(); 
     });
 }
